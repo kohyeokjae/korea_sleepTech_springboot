@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 // @SpringBootApplication
 // : 스프링부트에 필요한 기본 설정을 제공
-
 @SpringBootApplication
 public class KoreaSleepTechSpringbootApplication {
 
@@ -16,5 +15,4 @@ public class KoreaSleepTechSpringbootApplication {
         // : 커맨드 라인의 인수들을 전달
         SpringApplication.run(KoreaSleepTechSpringbootApplication.class, args);
     }
-
 }
