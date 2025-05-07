@@ -46,7 +46,7 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(books);
     }
 
-    // 3) REAN - 단건 책 조히 (특정 ID)
+    // 3) READ - 단건 책 조히 (특정 ID)
     @GetMapping("/{id}")
     public ResponseEntity<BookResponseDto> getBookById(@PathVariable Long id) {
         BookResponseDto book = bookService.getBookById(id);
