@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     // 댓글
     // : CUD (R은 제외)
-
     private final CommentService commentService;
 
     // 1) 댓글 생성
