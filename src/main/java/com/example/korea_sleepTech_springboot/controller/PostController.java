@@ -9,10 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController // @ResponseBody + @Controller
 @RequestMapping(ApiMappingPattern.POST_API)
@@ -31,4 +28,13 @@ public class PostController {
         ResponseDto<PostDetailResponseDto> post = postService.createPost(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
+
+    // 2) 단건 조회 (댓글 포함)
+    // @Param: 조회하고자 하는 댓글을 지정하는 고유 id - PathVariable(경로 변수)
+    @GetMapping("/{id}") // "/api/v1/posts/{id}
+    public ResponseEntity<ResponseDto<PostDetailResponseDto>> getPostById(@PathVariable Long id) {
+        ResponseDto<PostDetailResponseDto> post = postService.getPostById(id);
+    }
+
+    // 3) 전체 조회 (댓글 제외)
 }

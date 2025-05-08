@@ -36,4 +36,9 @@ public class PostServiceImpl implements PostService {
 
         return ResponseDto.setSuccess(ResponseMessage.SUCCESS, responseDto);
     }
+
+    @Override
+    public ResponseDto<PostDetailResponseDto> getPostById(Long id) {
+        return null;
+    }
 }

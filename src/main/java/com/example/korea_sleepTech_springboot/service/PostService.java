@@ -9,4 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface PostService {
     public ResponseDto<PostDetailResponseDto> createPost(@Valid PostCreateRequestDto dto);
+
+    ResponseDto<PostDetailResponseDto> getPostById(Long id);
 }
