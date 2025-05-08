@@ -2,13 +2,19 @@ package com.example.korea_sleepTech_springboot.service;
 
 import com.example.korea_sleepTech_springboot.dto.request.PostCreateRequestDto;
 import com.example.korea_sleepTech_springboot.dto.response.PostDetailResponseDto;
+import com.example.korea_sleepTech_springboot.dto.response.PostListResponseDto;
 import com.example.korea_sleepTech_springboot.dto.response.ResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface PostService {
     public ResponseDto<PostDetailResponseDto> createPost(@Valid PostCreateRequestDto dto);
 
     ResponseDto<PostDetailResponseDto> getPostById(Long id);
+
+
+    ResponseDto<List<PostListResponseDto>> getAllPosts();
 }

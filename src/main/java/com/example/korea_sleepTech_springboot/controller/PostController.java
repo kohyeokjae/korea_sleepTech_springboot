@@ -3,6 +3,7 @@ package com.example.korea_sleepTech_springboot.controller;
 import com.example.korea_sleepTech_springboot.common.ApiMappingPattern;
 import com.example.korea_sleepTech_springboot.dto.request.PostCreateRequestDto;
 import com.example.korea_sleepTech_springboot.dto.response.PostDetailResponseDto;
+import com.example.korea_sleepTech_springboot.dto.response.PostListResponseDto;
 import com.example.korea_sleepTech_springboot.dto.response.ResponseDto;
 import com.example.korea_sleepTech_springboot.service.PostService;
 import jakarta.validation.Valid;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController // @ResponseBody + @Controller
 @RequestMapping(ApiMappingPattern.POST_API)
@@ -34,7 +37,13 @@ public class PostController {
     @GetMapping("/{id}") // "/api/v1/posts/{id}
     public ResponseEntity<ResponseDto<PostDetailResponseDto>> getPostById(@PathVariable Long id) {
         ResponseDto<PostDetailResponseDto> post = postService.getPostById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(post);
     }
 
     // 3) 전체 조회 (댓글 제외)
+    @GetMapping
+    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> getAllPosts() {
+        ResponseDto<List<PostListResponseDto>> posts = postService.getAllPosts();
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
 }

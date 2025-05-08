@@ -2,13 +2,19 @@ package com.example.korea_sleepTech_springboot.service.implementations;
 
 import com.example.korea_sleepTech_springboot.common.ResponseMessage;
 import com.example.korea_sleepTech_springboot.dto.request.PostCreateRequestDto;
+import com.example.korea_sleepTech_springboot.dto.response.CommentResponseDto;
 import com.example.korea_sleepTech_springboot.dto.response.PostDetailResponseDto;
+import com.example.korea_sleepTech_springboot.dto.response.PostListResponseDto;
 import com.example.korea_sleepTech_springboot.dto.response.ResponseDto;
 import com.example.korea_sleepTech_springboot.entity.D_Post;
 import com.example.korea_sleepTech_springboot.repository.PostRepository;
 import com.example.korea_sleepTech_springboot.service.PostService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +45,48 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponseDto<PostDetailResponseDto> getPostById(Long id) {
-        return null;
+        PostDetailResponseDto responseDto = null;
+
+        D_Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with id"));
+
+        List<CommentResponseDto> comments = post.getComments().stream()
+                .map(comment -> CommentResponseDto.builder()
+                        .id(comment.getId())
+                        .postId(comment.getPost().getId())
+                        .content(comment.getContent())
+                        .commenter(comment.getCommenter())
+                        .build())
+                .collect(Collectors.toList());
+
+        responseDto = PostDetailResponseDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .author(post.getAuthor())
+                .comments(comments) // comment 테이블에서 테이터를 찾아 CommentResponseDto 형식으로 변환
+                .build();
+
+        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, responseDto);
     }
+
+    @Override
+    public ResponseDto<List<PostListResponseDto>> getAllPosts() {
+        List<PostListResponseDto> responseDto = null;
+
+        List<D_Post> posts = postRepository.findAll();
+
+        responseDto = posts.stream()
+                .map(post -> PostListResponseDto.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .author(post.getAuthor())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, responseDto);
+    }
+
+
 }
