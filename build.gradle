@@ -29,6 +29,7 @@ dependencies {
 
 	// 웹 애플리케이션 새발 시 반드시 필요: 내장 톰캣 서버를 실행, 스프링 어노테이션 사용을 가능하게 해줌
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
 	// 프로젝트 유효성 검사를 위한 의존성 입력
 	implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
 	// Validation API가 인터페이스 정의만 포함 (실제 구현체 X)
