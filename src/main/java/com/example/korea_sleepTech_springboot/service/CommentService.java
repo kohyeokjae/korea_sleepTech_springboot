@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 public interface CommentService {
     ResponseDto<CommentResponseDto> createComment(Long postId, @Valid CommentCreateRequestDto dto);
 
-    ResponseDto<CommentResponseDto> updateComment(Long postId, Long commentId, CommentUpdateRequestDto dto);
+    ResponseDto<CommentResponseDto> updateComment(Long postId, Long commentId, @Valid CommentUpdateRequestDto dto);
 
     ResponseDto<Void> deleteComment(Long postId, Long commentId);
 }
