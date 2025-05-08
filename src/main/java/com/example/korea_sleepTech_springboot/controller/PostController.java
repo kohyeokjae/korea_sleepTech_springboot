@@ -2,6 +2,7 @@ package com.example.korea_sleepTech_springboot.controller;
 
 import com.example.korea_sleepTech_springboot.common.ApiMappingPattern;
 import com.example.korea_sleepTech_springboot.dto.request.PostCreateRequestDto;
+import com.example.korea_sleepTech_springboot.dto.request.PostUpdateRequestDto;
 import com.example.korea_sleepTech_springboot.dto.response.PostDetailResponseDto;
 import com.example.korea_sleepTech_springboot.dto.response.PostListResponseDto;
 import com.example.korea_sleepTech_springboot.dto.response.ResponseDto;
@@ -27,7 +28,8 @@ public class PostController {
     // : DTO 객체에 대한 검증을 수행하는 어노테이션
     // : 사용자가 클라이언트로부터 전달하는 데이터가 미리 정의된 규칙에 맞는지 확인
     // - DTO 내에서 정의된 규칙에 맞지 않으면 에러 발생
-    public ResponseEntity<ResponseDto<PostDetailResponseDto>> createPost(@Valid @RequestBody PostCreateRequestDto dto) {
+    public ResponseEntity<ResponseDto<PostDetailResponseDto>> createPost(
+            @Valid @RequestBody PostCreateRequestDto dto) {
         ResponseDto<PostDetailResponseDto> post = postService.createPost(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
@@ -45,5 +47,20 @@ public class PostController {
     public ResponseEntity<ResponseDto<List<PostListResponseDto>>> getAllPosts() {
         ResponseDto<List<PostListResponseDto>> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
+
+    // 4) 게시물 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<PostDetailResponseDto>> updatePost(
+            @PathVariable Long id, @Valid @RequestBody PostUpdateRequestDto dto) {
+        ResponseDto<PostDetailResponseDto> responseDto = postService.updatePost(id, dto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    // 5) 게시물 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<Void>> deletePost(@PathVariable Long id){
+        ResponseDto<Void> responseDto = postService.deletePost(id);
+        return ResponseEntity.noContent().build();
     }
 }

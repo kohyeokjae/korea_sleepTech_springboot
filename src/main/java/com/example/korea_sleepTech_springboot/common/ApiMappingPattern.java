@@ -8,5 +8,15 @@ public class ApiMappingPattern {
 
     public static final String POST_API = "/api/v1/posts";
 
-    public static final String COMMENT_API = "/api/v1/comments";
+     // public static final String COMMENT_API = "/api/v1/comments";
+
+    // == REST API 설계 ==
+    // 현재 구조 - 댓글(Comment)이 게시글(Post) 엔티티에 포함 (1:N의 관계로 매핑)
+
+    // RESTful API의 설계 원칙: 종속적 테이터에 대해 하위 리소스 표현을 사용
+    // >>> 즉, 댓글의 CRUD는 게시글의 하위 리소스로 표현
+    // 1) 댓글 생성(POST): /api/v1/posts/{postId}/comments
+    // 2) 댓글 수정(PUT): /api/v1/posts/{postId}/comments/{commentId}
+    // 3) 댓글 삭제(DELETE): /api/v1/posts/{postId}/comments/{commentId}
+     public static final String COMMENT_API = "/api/v1/posts/{postId}/comments";
 }

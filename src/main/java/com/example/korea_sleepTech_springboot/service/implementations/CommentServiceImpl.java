@@ -2,6 +2,7 @@ package com.example.korea_sleepTech_springboot.service.implementations;
 
 import com.example.korea_sleepTech_springboot.common.ResponseMessage;
 import com.example.korea_sleepTech_springboot.dto.request.CommentCreateRequestDto;
+import com.example.korea_sleepTech_springboot.dto.request.CommentUpdateRequestDto;
 import com.example.korea_sleepTech_springboot.dto.response.CommentResponseDto;
 import com.example.korea_sleepTech_springboot.dto.response.ResponseDto;
 import com.example.korea_sleepTech_springboot.entity.D_Comment;
@@ -33,12 +34,12 @@ public class CommentServiceImpl implements CommentService {
 
         cf) 조회(Read)의 경우 내부 로직에서 변경 작업이 감지되면 예외가 발생하여 rollback() 처리
      */
-    public ResponseDto<CommentResponseDto> createComment(CommentCreateRequestDto dto) {
+    public ResponseDto<CommentResponseDto> createComment(Long postId, CommentCreateRequestDto dto) {
         CommentResponseDto responseDto = null;
 
         // post가 존재하는지 확인
-        D_Post post = postRepository.findById(dto.getPostId())
-                .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + dto.getPostId()));
+        D_Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_POST + postId));
 
         // 새로운 Comment 생성
         D_Comment newComment = D_Comment.builder()
@@ -57,5 +58,49 @@ public class CommentServiceImpl implements CommentService {
                 .build();
 
         return ResponseDto.setSuccess(ResponseMessage.SUCCESS, responseDto);
+    }
+
+    @Override
+    @Transactional
+    // 1번 게시물, 3번 댓글 수정
+    public ResponseDto<CommentResponseDto> updateComment(Long postId, Long commentId, CommentUpdateRequestDto dto) {
+        CommentResponseDto responseDto = null;
+
+        D_Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_COMMENT + commentId));
+
+        if (!comment.getPost().getId().equals(postId)) {
+            // 2번 게시물, 3번 댓글 수정
+            throw new IllegalArgumentException("Comment does not belong to the specified Post");
+        }
+
+        comment.setContent(dto.getContent());
+
+        D_Comment updatedComment = commentRepository.save(comment);
+
+        responseDto = CommentResponseDto.builder()
+                .id(updatedComment.getId())
+                .postId(updatedComment.getPost().getId())
+                .content(updatedComment.getContent())
+                .commenter(updatedComment.getCommenter())
+                .build();
+
+        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, responseDto);
+    }
+
+    @Override
+    @Transactional
+    public ResponseDto<Void> deleteComment(Long postId, Long commentId) {
+        D_Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_EXISTS_COMMENT + commentId));
+
+        if (!comment.getPost().getId().equals(postId)) {
+            // 2번 게시물, 3번 댓글 수정
+            throw new IllegalArgumentException("Comment does not belong to the specified Post");
+        }
+
+        commentRepository.deleteById(commentId);
+
+        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, null);
     }
 }
