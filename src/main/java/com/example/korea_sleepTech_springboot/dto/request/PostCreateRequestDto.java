@@ -1,3 +1,4 @@
+
 package com.example.korea_sleepTech_springboot.dto.request;
 
 // Dto 클래스명 지정
@@ -7,7 +8,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

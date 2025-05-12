@@ -12,5 +12,5 @@ public interface CommentService {
     ResponseDto<CommentResponseDto> updateComment(Long postId, Long commentId, @Valid CommentUpdateRequestDto dto);
 
     ResponseDto<Void> deleteComment(Long postId, Long commentId);
-    
+
 }
