@@ -4,11 +4,11 @@ package com.example.korea_sleepTech_springboot.common;
 // : RESTfull하게 API 경로를 규칙적으로 설계하는 것
 // - 각 Controller의 고유 경로를 지정
 public class ApiMappingPattern {
+    public static final String AUTH_API = "/api/v1/auth";
+
     public static final String BOOK_API = "/api/v1/books";
-
     public static final String POST_API = "/api/v1/posts";
-
-     // public static final String COMMENT_API = "/api/v1/comments";
+    // public static final String COMMENT_API = "/api/v1/comments";
 
     // == REST API 설계 ==
     // 현재 구조 - 댓글(Comment)이 게시글(Post) 엔티티에 포함 (1:N의 관계로 매핑)
@@ -18,5 +18,6 @@ public class ApiMappingPattern {
     // 1) 댓글 생성(POST): /api/v1/posts/{postId}/comments
     // 2) 댓글 수정(PUT): /api/v1/posts/{postId}/comments/{commentId}
     // 3) 댓글 삭제(DELETE): /api/v1/posts/{postId}/comments/{commentId}
-     public static final String COMMENT_API = "/api/v1/posts/{postId}/comments";
+    public static final String COMMENT_API = "/api/v1/posts/{postId}/comments";
+
 }
