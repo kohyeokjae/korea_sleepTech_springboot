@@ -1,10 +1,7 @@
 package com.example.korea_sleepTech_springboot.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,12 +11,14 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
+
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 // : 기본 생성자 생성
 //      - AccessLevel.PROTECTED를 통해 외부에서 new 키워드로 객체 생성 불가
 //      - JPA는 기본 생성자가 반드시 필요, 외부에서 임의 생성 방지
 @Getter
+@Setter
 public class User implements UserDetails {
     // UserDetails
     // : Spring Security의 UserDetails 인터페이스를 구현
