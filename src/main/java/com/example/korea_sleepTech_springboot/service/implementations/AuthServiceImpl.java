@@ -6,8 +6,10 @@ import com.example.korea_sleepTech_springboot.dto.user.request.UserSignInRequest
 import com.example.korea_sleepTech_springboot.dto.user.request.UserSignUpRequestDto;
 import com.example.korea_sleepTech_springboot.dto.user.response.UserSignInResponseDto;
 import com.example.korea_sleepTech_springboot.dto.user.response.UserSignUpResponseDto;
+import com.example.korea_sleepTech_springboot.entity.Role;
 import com.example.korea_sleepTech_springboot.entity.User;
 import com.example.korea_sleepTech_springboot.provider.JwtProvider;
+import com.example.korea_sleepTech_springboot.repository.RoleRepository;
 import com.example.korea_sleepTech_springboot.repository.UserRepository;
 import com.example.korea_sleepTech_springboot.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtProvider jwtProvider;
+    private final RoleRepository roleRepository;
 
     // 1) 회원 가입
     @Override
@@ -48,11 +54,21 @@ public class AuthServiceImpl implements AuthService {
         // 패스워드 암호화
         String encodePassword = bCryptPasswordEncoder.encode(password);
 
+        // 권한 정보 확인
+        Role userRole = roleRepository.findByRoleName("USER")
+            .orElseGet(() -> roleRepository.save(Role.builder()
+                .roleName("USER")
+                .build()));
+
+        Set<Role> roleSet = new HashSet<>();
+        roleSet.add(userRole);
+
         user = User.builder()
-                .email(email)
-                .password(encodePassword)
-                .createdAt(LocalDateTime.now())
-                .build();
+            .email(email)
+            .password(encodePassword)
+            .createdAt(LocalDateTime.now())
+            .roles(roleSet)
+            .build();
 
         userRepository.save(user);
 
@@ -73,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
         int exprTime = jwtProvider.getExpiration();
 
         user = userRepository.findByEmail(email)
-                .orElseThrow(null);
+            .orElseThrow(null);
 
         if (user == null) {
             return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_USER);
@@ -85,7 +101,13 @@ public class AuthServiceImpl implements AuthService {
             return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_PASSWORD);
         }
 
-        String token = jwtProvider.generateJwtToken(email); // username에 email 저장
+        // 사용자 정보의 권한 정보를 호출
+        Set<String> roles = user.getRoles().stream()
+            .map(Role::getRoleName)
+            // .map(role -> role.getRoleName())
+            .collect(Collectors.toSet());
+
+        String token = jwtProvider.generateJwtToken(email, roles); // username에 email 저장
 
         data = new UserSignInResponseDto(token, user, exprTime);
 
