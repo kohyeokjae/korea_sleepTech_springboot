@@ -1,7 +1,7 @@
 
 package com.example.korea_sleepTech_springboot.controller;
 
-import com.example.korea_sleepTech_springboot.common.ApiMappingPattern;
+import com.example.korea_sleepTech_springboot.common.constants.ApiMappingPattern;
 import com.example.korea_sleepTech_springboot.dto.request.PostCreateRequestDto;
 import com.example.korea_sleepTech_springboot.dto.request.PostUpdateRequestDto;
 import com.example.korea_sleepTech_springboot.dto.response.PostDetailResponseDto;
